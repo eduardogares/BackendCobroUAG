@@ -1,0 +1,67 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+# NOTE: update this with your service name
+service: itscalithecat
+
+# Enable auto-packing of external modules
+custom:
+    webpackIncludeModules: true
+    default_stage: dev
+    # alerts:
+    #   stages:
+    #     - ${opt:stage, self:custom.default_stage}
+    #   topics:
+    #     alarm: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.CUSTOM_ERROR_SNS_TOPIC_ARN}
+    #   alarms:
+    #     - functionInvocations
+    #     - functionErrors
+    #     - functionThrottles
+    # customDomain:
+    #   basePath: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_BASE_PATH}
+    #   domainName: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_NAME}
+    #   stage: ${opt:stage, self:custom.default_stage}
+plugins:
+    - serverless-webpack
+    - serverless-offline
+    # - serverless-plugin-aws-alerts
+    # - serverless-domain-manager
+    - serverless-plugin-split-stacks
+
+provider:
+    name: aws
+    runtime: nodejs6.10
+    stage: ${opt:stage, self:custom.default_stage}
+    profile: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.AWS_PROFILE}
+    environment: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}}
+    region: us-east-1
+    role: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.PROVIDER_ROLE_ARN}
+    # vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
+    #     securityGroupIds:
+    #         - sg-4cf1b239 # SG that grants acces to RDS (under our default VPC).
+    #     subnetIds: # Subnets that redirect outgoing traffic through the NAT configured for these private subnets (under our default VPC).
+    #         - subnet-e81d94d7
+    #         - subnet-ad1e74e6
+
+functions:
+    demo:
+        name: Demo_${opt:stage, self:custom.default_stage}
+        handler: src/functions/demo.demo
+        timeout: 30
+        events:
+            - http:
+                path: demo/{someVar}
+                method: put
+                cors: true
+        # authorizer: aws_iam Does not apply to BMUser || BMAdmin
+
