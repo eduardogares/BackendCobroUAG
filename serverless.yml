@@ -60,8 +60,7 @@ functions:
         timeout: 30
         events:
             - http:
-                path: demo/{someVar}
-                method: put
+                path: demo
+                method: get
                 cors: true
         # authorizer: aws_iam Does not apply to BMUser || BMAdmin
-
