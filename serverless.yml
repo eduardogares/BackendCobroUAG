@@ -55,7 +55,6 @@ provider:
 
 functions:
     demo:
-        name: Demo_${opt:stage, self:custom.default_stage}
         handler: src/functions/demo.demo
         timeout: 30
         events:
@@ -63,5 +62,15 @@ functions:
                 path: demo/{someVar}
                 method: put
                 cors: true
-        # authorizer: aws_iam Does not apply to BMUser || BMAdmin
-
+    messengerBotWebhook:
+        handler: src/functions/messenger.webhook
+        timeout: 30
+        events:
+          - http:
+              path: webhook/messenger
+              method: get
+              cors: true
+          - http:
+              path: webhook/messenger
+              method: post
+              cors: true
