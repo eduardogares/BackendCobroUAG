@@ -16,65 +16,62 @@ service: backendcobrouag
 
 # Enable auto-packing of external modules
 custom:
-    webpackIncludeModules: true
-    default_stage: dev
-    # alerts:
-    #   stages:
-    #     - ${opt:stage, self:custom.default_stage}
-    #   topics:
-    #     alarm: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.CUSTOM_ERROR_SNS_TOPIC_ARN}
-    #   alarms:
-    #     - functionInvocations
-    #     - functionErrors
-    #     - functionThrottles
-    customDomain:
-      basePath: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_BASE_PATH}
-      domainName: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_NAME}
-      stage: ${opt:stage, self:custom.default_stage}
+   webpackIncludeModules: true
+   default_stage: dev
+   # alerts:
+   #   stages:
+   #     - ${opt:stage, self:custom.default_stage}
+   #   topics:
+   #     alarm: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.CUSTOM_ERROR_SNS_TOPIC_ARN}
+   #   alarms:
+   #     - functionInvocations
+   #     - functionErrors
+   #     - functionThrottles
+   #customDomain:
+   #   basePath: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_BASE_PATH}
+   #   domainName: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_NAME}
+   #   stage: ${opt:stage, self:custom.default_stage}
 plugins:
-    - serverless-webpack
-    - serverless-offline
-    # - serverless-plugin-aws-alerts
-    - serverless-domain-manager
-    - serverless-plugin-split-stacks
+   - serverless-webpack
+   - serverless-offline
+   # - serverless-plugin-aws-alerts
+   # serverless-domain-manager
+   - serverless-plugin-split-stacks
 
 provider:
-    name: aws
-    runtime: nodejs6.10
-    stage: ${opt:stage, self:custom.default_stage}
-    profile: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.AWS_PROFILE}
-    environment: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}}
-    region: us-east-1
-    role: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.PROVIDER_ROLE_ARN}
-    # vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
-    #     securityGroupIds:
-    #         - sg-4cf1b239 # SG that grants acces to RDS (under our default VPC).
-    #     subnetIds: # Subnets that redirect outgoing traffic through the NAT configured for these private subnets (under our default VPC).
-    #         - subnet-e81d94d7
-    #         - subnet-ad1e74e6
+   name: aws
+   runtime: nodejs6.10
+   stage: ${opt:stage, self:custom.default_stage}
+   profile: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.AWS_PROFILE}
+   environment: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}}
+   region: us-east-1
+   role: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.PROVIDER_ROLE_ARN}
+   # vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
+   #     securityGroupIds:
+   #         - sg-4cf1b239 # SG that grants acces to RDS (under our default VPC).
+   #     subnetIds: # Subnets that redirect outgoing traffic through the NAT configured for these private subnets (under our default VPC).
+   #         - subnet-e81d94d7
+   #         - subnet-ad1e74e6
 
 functions:
-    demo:
-        handler: src/functions/demo.demo
-        timeout: 30
-        events:
-            - http:
-                path: demo
-                method: get
-                cors: true
-<<<<<<< HEAD
-        # authorizer: aws_iam Does not apply to BMUser || BMAdmin
-=======
-    messengerBotWebhook:
-        handler: src/functions/messenger.webhook
-        timeout: 30
-        events:
-          - http:
-              path: webhook/messenger
-              method: get
-              cors: true
-          - http:
-              path: webhook/messenger
-              method: post
-              cors: true
->>>>>>> master
+   demo:
+       handler: src/functions/demo.demo
+       timeout: 30
+       events:
+           - http:
+               path: demo
+               method: get
+               cors: true
+   messengerBotWebhook:
+       handler: src/functions/messenger.webhook
+       timeout: 30
+       
+       events:
+         - http:
+             path: webhook/messenger
+             method: get
+             cors: true
+         - http:
+             path: webhook/messenger
+             method: post
+             cors: true
