@@ -31,6 +31,7 @@ custom:
       basePath: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_BASE_PATH}
       domainName: ${file(./serverless.env.yml):${opt:stage, self:custom.default_stage}.SERVICE_DOMAIN_NAME}
       stage: ${opt:stage, self:custom.default_stage}
+      createRoute53Record: true
 plugins:
     - serverless-webpack
     - serverless-offline
@@ -55,12 +56,30 @@ provider:
 
 functions:
     demo:
-        name: Demo_${opt:stage, self:custom.default_stage}
         handler: src/functions/demo.demo
         timeout: 30
         events:
             - http:
-                path: demo
+                path: demo/{someVar}
+                method: put
+                cors: true
+    messengerBotWebhook:
+        handler: src/functions/messenger.webhook
+        timeout: 30
+        events:
+            - http:
+                path: webhook/messenger
                 method: get
                 cors: true
-        # authorizer: aws_iam Does not apply to BMUser || BMAdmin
+            - http:
+                path: webhook/messenger
+                method: post
+                cors: true
+    createOxxoCharge:
+        handler: src/functions/conekta.createOxxoCharge
+        timeout: 30
+        events:
+            - http:
+                path: charge/oxxo
+                method: put
+                cors: true
