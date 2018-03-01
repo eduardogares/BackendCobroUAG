@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "name": "backend.cobro.uag",
-=======
-  "name": "api.suiiki.com",
->>>>>>> master
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
